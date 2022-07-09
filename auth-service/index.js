@@ -5,7 +5,6 @@ const compression = require('compression');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
-const authService = require('./services/auth.service');
 
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('connected', () => {
@@ -17,7 +16,6 @@ mongoose.connection.on('disconnected', () => {
 mongoose.connection.on('error', (err) => {
 	console.log('auth-service database error: ', err.message);
 });
-
 
 const app = express();
 app.use(morgan('combined'));

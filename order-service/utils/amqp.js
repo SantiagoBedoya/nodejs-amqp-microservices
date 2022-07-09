@@ -10,6 +10,14 @@ module.exports = {
 			await this.channel.assertQueue(queueName);
 		}
 		return {connection: this.connection, channel: this.channel };
+	},
+	async closeConnection() {
+		if(this.connection){
+			await this.channel.close();
+			await this.connection.close();
+			this.connection = null;
+			this.channel = null;
+		}
 	}
 }
 

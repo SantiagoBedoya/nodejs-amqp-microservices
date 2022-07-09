@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const amqp = require('../utils/amqp');
 const { default: axios } = require('axios');
 
 const isAuthenticated = async (req, res, next) => {
@@ -9,7 +8,7 @@ const isAuthenticated = async (req, res, next) => {
 	}
 	const token = header.split(' ')[1];
 	const apiUrl = process.env.AUTH_MS_URL || '';
-	try {
+	try {	
 		const resp = await axios.post(`${apiUrl}/v1/auth/validate`, {
 			token
 		});
@@ -17,6 +16,6 @@ const isAuthenticated = async (req, res, next) => {
 		next();	
 	} catch(err) {
 		return res.status(401).json('Unauthorized');
-	}
+	}	
 }
 module.exports = isAuthenticated;

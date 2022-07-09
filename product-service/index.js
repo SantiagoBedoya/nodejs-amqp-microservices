@@ -5,6 +5,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
+const amqp = require('./utils/amqp');
 
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('connected', () => {
@@ -41,16 +42,20 @@ const server = app.listen(PORT, () =>{
 process.on('SIGINT', () => {
 	server.close(() => {
 		mongoose.connection.close(false, () => {
-			console.log('shutting down');
-			process.exit(0);
+			amqp.closeConnection().then(() => {
+				console.log('shutting down');
+				process.exit(0);
+			})
 		})
 	})
 });
 process.on('SIGTERM', () => {
 	server.close(() => {
 		mongoose.connection.close(false, () => {
-			console.log('shutting down');
-			process.exit(0);
+			amqp.closeConnection().then(() => {
+				console.log('shutting down');
+				process.exit(0);
+			})
 		})
 	})
 });
